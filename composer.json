@@ -23,7 +23,7 @@
     "target-dir": "Fantoine/CsrfRouteBundle",
     "extra": {
         "branch-alias": {
-            "dev-master": "dev-1.0.x"
+            "dev-master": "dev-1.0.0"
         }
     }
 }
