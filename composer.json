@@ -1,0 +1,27 @@
+{
+    "name": "fantoine/csrf-route-bundle",
+    "type": "symfony-bundle",
+    "description": "Symfony2 bundle which provides a simple way to add CSRF tokens to routes",
+    "keywords": ["translation", "extractor"],
+    "homepage": "https://github.com/fantoine/csrf-route-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fabien Antoine",
+            "email": "fabien@fantoine.fr"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "autoload": {
+	    "psr-0": { "Fantoine\\CsrfRouteBundle": "" }
+    },
+    "target-dir": "Fantoine/CsrfRouteBundle",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
