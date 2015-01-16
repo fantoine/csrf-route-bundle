@@ -21,10 +21,5 @@
             "Fantoine\\CsrfRouteBundle": ""
         }
     },
-    "target-dir": "Fantoine/CsrfRouteBundle",
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.0.x-dev"
-        }
-    }
+    "target-dir": "Fantoine/CsrfRouteBundle"
 }
