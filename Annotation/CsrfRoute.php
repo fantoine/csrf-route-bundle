@@ -5,7 +5,7 @@ namespace Fantoine\CsrfRouteBundle\Annotation;
 /**
  * Description of CsrfRoute
  *
- * @author Fabien Antoine <fantoine@fox-mind.com>
+ * @author Fabien Antoine <fabien@fantoine.fr>
  * 
  * @Annotation
  * @Target("METHOD")
@@ -29,7 +29,7 @@ class CsrfRoute
     /**
      * @var array
      */
-    protected $method;
+    protected $methods;
     
     /**
      * @param array $values
@@ -39,12 +39,12 @@ class CsrfRoute
         $options = array_merge([
             'token'     => '_token',
             'intention' => '',
-            'method'    => 'GET',
+            'methods'   => 'GET',
         ], $values);
         
         $this->token     = $options['token'];
         $this->intention = $options['intention'];
-        $this->method    = $options['method'];
+        $this->methods   = $options['methods'];
     }
     
     /**
@@ -66,8 +66,20 @@ class CsrfRoute
     /**
      * @return array
      */
-    public function getMethod()
+    public function getMethods()
     {
-        return (is_array($this->method) ? $this->method : [ (string) $this->method ]);
+        return (is_array($this->methods) ? $this->methods : [ (string) $this->methods ]);
+    }
+    
+    /**
+     * @return array
+     */
+    public function getOptions()
+    {
+        return [
+            'token'     => $this->getToken(),
+            'intention' => $this->getIntention(),
+            'methods'   => $this->getMethods(),
+        ];
     }
 }

@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 /**
  * Description of ControllerListener
  *
- * @author Fabien Antoine <fantoine@fox-mind.com>
+ * @author Fabien Antoine <fabien@fantoine.fr>
  */
 class ControllerListener implements EventSubscriberInterface
 {
@@ -56,6 +56,7 @@ class ControllerListener implements EventSubscriberInterface
     public function onKernelController(FilterControllerEvent $event)
     {
         $controller = $event->getController();
+        $request    = $event->getRequest();
 
         // Symfony2 uses array to specify controllers
         if (!is_array($controller)) {
@@ -82,7 +83,7 @@ class ControllerListener implements EventSubscriberInterface
         }
         
         // Check HTTP method
-        if (!in_array($event->getRequest()->getMethod(), $annotation->getMethod())) {
+        if (!in_array($request->getMethod(), $annotation->getMethods())) {
             return;
         }
         
@@ -92,7 +93,7 @@ class ControllerListener implements EventSubscriberInterface
             $this->accessDenied();
         }
         $token = new CsrfToken(
-            $annotation->getIntention(),
+            $annotation->getIntention() ?: $request->attributes->get('_route'),
             $query->get($annotation->getToken())
         );
         if (!$this->tokenManager->isTokenValid($token)) {

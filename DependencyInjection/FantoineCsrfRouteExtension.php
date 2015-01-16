@@ -8,9 +8,9 @@ use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * This is the class that loads and manages your bundle configuration
+ * Description of FantoineCsrfRouteExtension
  *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
+ * @author Fabien Antoine <fabien@fantoine.fr>
  */
 class FantoineCsrfRouteExtension extends Extension
 {
