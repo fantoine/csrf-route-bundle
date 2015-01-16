@@ -2,13 +2,14 @@
 <container xmlns="http://symfony.com/schema/dic/services"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-    <!--
     <parameters>
-        <parameter key="fantoine_csrf_route.sample.class"></parameter>
+        <parameter key="fantoine_csrf_route.listener.controller.class"></parameter>
     </parameters>
     <services>
-        <service id="fantoine_csrf_route.sample" class="%fantoine_csrf_route.sample.class%">
+        <service id="fantoine_csrf_route.listener.controller" class="%fantoine_csrf_route.listener.controller.class%">
+            <argument type="service" id="annotation_reader" />
+            <argument type="service" id="form.csrf_provider" />
+            <tag name="kernel.event_subscriber" />
         </service>
     </services>
-    -->
 </container>
