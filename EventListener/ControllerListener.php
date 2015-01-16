@@ -8,6 +8,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Doctrine\Common\Annotations\Reader;
+use Doctrine\Common\Persistence\Proxy;
 
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -66,15 +67,20 @@ class ControllerListener implements EventSubscriberInterface
         // Get parameters
         list($object, $method) = $controller;
         
+        // If the object is a proxy, load it
+        if ($object instanceof Proxy) {
+            $object->__load();
+        }
+        
         // Get reflection objects
-        $reflectionClass  = new \ReflectionClass(get_class($object));
+        $reflectionClass  = new \ReflectionClass($this->getClassName($object));
         $reflectionMethod = $reflectionClass->getMethod($method);
         
         // Get annotation
         /** @var \Fantoine\CsrfRouteBundle\Annotation\CsrfRoute $annotation */
         $annotation = $this->annotationReader->getMethodAnnotation(
             $reflectionMethod,
-            'Fantoine\CsrfRouteBundle\Annotation\CsrfRoute'
+            '\\Fantoine\\CsrfRouteBundle\\Annotation\\CsrfRoute'
         );
         
         // Check annotation
@@ -107,5 +113,18 @@ class ControllerListener implements EventSubscriberInterface
     protected function accessDenied()
     {
         throw new AccessDeniedHttpException('Invalid CSRF token');
+    }
+    
+    /**
+     * @param mixed $object
+     * @return string
+     */
+    protected function getClassName($object)
+    {
+        if (class_exists('\Doctrine\Common\Util\ClassUtils')) {
+            return \Doctrine\Common\Util\ClassUtils::getClass($object);
+        }
+        
+        return get_class($object);
     }
 }
