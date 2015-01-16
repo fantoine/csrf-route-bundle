@@ -7,7 +7,7 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
-use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\Reader;
 
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -29,7 +29,7 @@ class ControllerListener implements EventSubscriberInterface
     }
     
     /**
-     * @var AnnotationReader 
+     * @var Reader 
      */
     protected $annotationReader;
     
@@ -39,11 +39,11 @@ class ControllerListener implements EventSubscriberInterface
     protected $tokenManager;
     
     /**
-     * @param AnnotationReader $annotationReader
+     * @param Reader $annotationReader
      * @param CsrfTokenManagerInterface $tokenManager
      */
     public function __construct(
-        AnnotationReader $annotationReader,
+        Reader $annotationReader,
         CsrfTokenManagerInterface $tokenManager)
     {
         $this->annotationReader = $annotationReader;
