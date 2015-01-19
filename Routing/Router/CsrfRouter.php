@@ -2,11 +2,11 @@
 
 namespace Fantoine\CsrfRouteBundle\Routing\Router;
 
+use Fantoine\CsrfRouteBundle\Manager\CsrfTokenManager;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * Description of CsrfRouter
@@ -21,7 +21,7 @@ class CsrfRouter extends Router
     protected $parent;
     
     /**
-     * @var CsrfTokenManagerInterface 
+     * @var CsrfTokenManager
      */
     protected $tokenManager;
     
@@ -34,9 +34,9 @@ class CsrfRouter extends Router
     }
     
     /**
-     * @param CsrfTokenManagerInterface $tokenManager
+     * @param CsrfTokenManager $tokenManager
      */
-    public function setTokenManager(CsrfTokenManagerInterface $tokenManager)
+    public function setTokenManager(CsrfTokenManager $tokenManager)
     {
         $this->tokenManager = $tokenManager;
     }
@@ -87,14 +87,11 @@ class CsrfRouter extends Router
     {
         // Add Csrf token if required
         $route = $this->getRouteCollection()->get($name);
-        if (null !== $route && $route->hasOption('fantoine_csrf_route')) {
-            $option = $route->getOption('fantoine_csrf_route');
-            
-            // Create token
-            $parameters[$option['token']] = $this->tokenManager
-                ->getToken($option['intention'] ?: $name)
-                ->getValue()
-            ;
+        if (null !== $route) {
+            // Apply token if required
+            $this->tokenManager->updateRoute(
+                $route, $name, $parameters
+            );
         }
         
         if (null !== $this->parent) {

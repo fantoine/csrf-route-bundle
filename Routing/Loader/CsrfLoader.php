@@ -26,11 +26,11 @@ class CsrfLoader extends AnnotatedRouteControllerLoader
     {
         parent::configureRoute($route, $class, $method, $annot);
         
-        /** @var \Fantoine\CsrfRouteBundle\Annotation\CsrfRoute */
-        $annotation = $this->reader->getMethodAnnotation($method, '\\Fantoine\\CsrfRouteBundle\\Annotation\\CsrfRoute');
+        /** @var \Fantoine\CsrfRouteBundle\Annotation\CsrfToken */
+        $annotation = $this->reader->getMethodAnnotation($method, '\\Fantoine\\CsrfRouteBundle\\Annotation\\CsrfToken');
         if (null !== $annotation) {
-            // Store the CsrfRoute options on Route options
-            $route->setOption('fantoine_csrf_route', $annotation->getOptions());
+            // Store the CsrfToken options on Route options
+            $route->setOption('csrf_token', $annotation->toOption());
         }
     }
 }

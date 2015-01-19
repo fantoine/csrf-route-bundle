@@ -3,6 +3,9 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
+        <!-- Managers -->
+        <parameter key="fantoine_csrf_route.manager.class">Fantoine\CsrfRouteBundle\Manager\CsrfTokenManager</parameter>
+        
         <!-- Event Listeners -->
         <parameter key="fantoine_csrf_route.listener.controller.class">Fantoine\CsrfRouteBundle\EventListener\ControllerListener</parameter>
         
@@ -11,17 +14,22 @@
         <parameter key="fantoine_csrf_route.routing.loader.class">Fantoine\CsrfRouteBundle\Routing\Loader\CsrfLoader</parameter>
     </parameters>
     <services>
+        <!-- Managers -->
+        <service id="fantoine_csrf_route.manager" class="%fantoine_csrf_route.manager.class%">
+            <argument type="service" id="security.csrf.token_manager" />
+        </service>
+        
         <!-- Event Listeners -->
         <service id="fantoine_csrf_route.listener.controller" class="%fantoine_csrf_route.listener.controller.class%">
-            <argument type="service" id="annotation_reader" />
-            <argument type="service" id="security.csrf.token_manager" />
+            <argument type="service" id="router" />
+            <argument type="service" id="fantoine_csrf_route.manager" />
             <tag name="kernel.event_subscriber" />
         </service>
         
         <!-- Routing -->
         <service id="fantoine_csrf_route.routing.router" class="%fantoine_csrf_route.routing.router.class%" parent="router.default" public="false">
             <call method="setTokenManager">
-                <argument type="service" id="security.csrf.token_manager" />
+                <argument type="service" id="fantoine_csrf_route.manager" />
             </call>
         </service>
     </services>
