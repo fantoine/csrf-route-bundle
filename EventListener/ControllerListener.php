@@ -4,6 +4,7 @@ namespace Fantoine\CsrfRouteBundle\EventListener;
 
 use Fantoine\CsrfRouteBundle\Manager\CsrfTokenManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RouterInterface;
@@ -36,15 +37,31 @@ class ControllerListener implements EventSubscriberInterface
     protected $tokenManager;
     
     /**
+     * @var string
+     */
+    protected $cacheDirectory;
+    
+    /**
+     * @var Filesystem
+     */
+    protected $filesystem;
+    
+    /**
      * @param RouterInterface $router
      * @param CsrfTokenManager $tokenManager
+     * @param Filesystem $filesystem
+     * @param string $cacheDirectory
      */
     public function __construct(
         RouterInterface $router,
-        CsrfTokenManager $tokenManager)
+        CsrfTokenManager $tokenManager,
+        Filesystem $filesystem,
+        $cacheDirectory)
     {
-        $this->router       = $router;
-        $this->tokenManager = $tokenManager;
+        $this->router         = $router;
+        $this->tokenManager   = $tokenManager;
+        $this->filesystem     = $filesystem;
+        $this->cacheDirectory = $cacheDirectory;
     }
     
     /**
@@ -61,7 +78,7 @@ class ControllerListener implements EventSubscriberInterface
         }
         
         // Get route
-        $route = $this->router->getRouteCollection()->get($routeName);
+        $route = $this->getRoute($routeName);
         if (null === $route) {
             return;
         }
@@ -70,5 +87,32 @@ class ControllerListener implements EventSubscriberInterface
         $this->tokenManager->validateRoute(
             $route, $routeName, $request
         );
+    }
+    
+    /**
+     * @param string $routeName
+     * @return \Symfony\Component\Routing\Route|null
+     */
+    protected function getRoute($routeName)
+    {
+        // Create cache directory
+        $this->filesystem->mkdir($this->cacheDirectory);
+        
+        $route = null;
+        
+        try {
+            $file = sprintf('%s/%s.php', $this->cacheDirectory, md5($routeName));
+            if (!$this->filesystem->exists($file)) {
+                // Get route
+                $route = $this->router->getRouteCollection()->get($routeName);
+
+                // Serialize it
+                file_put_contents($file, serialize($route));
+            } else {
+                $route = unserialize(file_get_contents($file));
+            }
+        } catch (\Exception $e) {}
+        
+        return $route;
     }
 }

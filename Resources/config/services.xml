@@ -23,6 +23,8 @@
         <service id="fantoine_csrf_route.listener.controller" class="%fantoine_csrf_route.listener.controller.class%">
             <argument type="service" id="router" />
             <argument type="service" id="fantoine_csrf_route.manager" />
+            <argument type="service" id="filesystem" />
+            <argument>%kernel.cache_dir%/fantoine_csrf_route/routes</argument>
             <tag name="kernel.event_subscriber" />
         </service>
         
