@@ -101,7 +101,7 @@ class ControllerListener implements EventSubscriberInterface
         $route = null;
         
         try {
-            $file = sprintf('%s/%s.php', $this->cacheDirectory, md5($routeName));
+            $file = sprintf('%s/%s.data', $this->cacheDirectory, md5($routeName));
             if (!$this->filesystem->exists($file)) {
                 // Get route
                 $route = $this->router->getRouteCollection()->get($routeName);
