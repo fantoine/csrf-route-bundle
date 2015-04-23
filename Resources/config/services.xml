@@ -6,6 +6,10 @@
         <!-- Managers -->
         <parameter key="fantoine_csrf_route.manager.class">Fantoine\CsrfRouteBundle\Manager\CsrfTokenManager</parameter>
         
+        <!-- Handlers -->
+        <parameter key="fantoine_csrf_route.handler.security.class">Fantoine\CsrfRouteBundle\Handler\SecurityTokenHandler</parameter>
+        <parameter key="fantoine_csrf_route.handler.form.class">Fantoine\CsrfRouteBundle\Handler\FormTokenHandler</parameter>
+        
         <!-- Event Listeners -->
         <parameter key="fantoine_csrf_route.listener.controller.class">Fantoine\CsrfRouteBundle\EventListener\ControllerListener</parameter>
         
@@ -16,7 +20,7 @@
     <services>
         <!-- Managers -->
         <service id="fantoine_csrf_route.manager" class="%fantoine_csrf_route.manager.class%">
-            <argument type="service" id="security.csrf.token_manager" />
+            <argument type="service" id="fantoine_csrf_route.handler" />
         </service>
         
         <!-- Event Listeners -->

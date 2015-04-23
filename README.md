@@ -29,7 +29,7 @@ Then, register the bundle in your application's kernel class:
     {
         $bundles = array(
             // ...
-            new Fantoine\CsrfRouteBundle\FantoineCsrfRouteBundleBundle(),
+            new Fantoine\CsrfRouteBundle\FantoineCsrfRouteBundle(),
             // ...
         );
     }

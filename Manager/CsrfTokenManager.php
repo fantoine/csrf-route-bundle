@@ -2,11 +2,10 @@
 
 namespace Fantoine\CsrfRouteBundle\Manager;
 
+use Fantoine\CsrfRouteBundle\Handler\TokenHandlerInterface;
 use Fantoine\CsrfRouteBundle\Model\CsrfToken;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
-use Symfony\Component\Security\Csrf\CsrfToken as SecurityCsrfToken;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -23,16 +22,16 @@ class CsrfTokenManager
     const OPTION_NAME = 'csrf_token';
     
     /**
-     * @var CsrfTokenManagerInterface
+     * @var TokenHandlerInterface
      */
-    protected $tokenManager;
+    protected $tokenHandler;
     
     /**
-     * @param CsrfTokenManagerInterface $tokenManager
+     * @param TokenHandlerInterface $tokenHandler
      */
-    public function __construct(CsrfTokenManagerInterface $tokenManager)
+    public function __construct(TokenHandlerInterface $tokenHandler)
     {
-        $this->tokenManager = $tokenManager;
+        $this->tokenHandler = $tokenHandler;
     }
     
     /**
@@ -102,9 +101,8 @@ class CsrfTokenManager
         }
         
         // Add token
-        $parameters[$token->getToken()] = $this->tokenManager
+        $parameters[$token->getToken()] = $this->tokenHandler
             ->getToken($token->getIntention() ?: $name)
-            ->getValue()
         ;
     }
     
@@ -131,11 +129,11 @@ class CsrfTokenManager
         if (!$query->has($token->getToken())) {
             $this->accessDenied();
         }
-        $securityToken = new SecurityCsrfToken(
+        $valid = $this->tokenHandler->isTokenValid(
             $token->getIntention() ?: $routeName,
             $query->get($token->getToken())
         );
-        if (!$this->tokenManager->isTokenValid($securityToken)) {
+        if (!$valid) {
             $this->accessDenied();
         }
     }
