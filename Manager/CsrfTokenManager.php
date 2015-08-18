@@ -25,30 +25,37 @@ class CsrfTokenManager
      * @var TokenHandlerInterface
      */
     protected $tokenHandler;
-    
+
+    /**
+     * @var string
+     */
+    protected $fieldName;
+
     /**
      * @param TokenHandlerInterface $tokenHandler
+     * @param string $fieldName
      */
-    public function __construct(TokenHandlerInterface $tokenHandler)
+    public function __construct(TokenHandlerInterface $tokenHandler, $fieldName)
     {
         $this->tokenHandler = $tokenHandler;
+        $this->fieldName    = $fieldName;
     }
-    
+
     /**
      * @return CsrfToken
      */
     public function getDefaultToken()
     {
         return (new CsrfToken())
-            ->setToken('_token')
+            ->setToken($this->fieldName)
             ->setIntention(null)
             ->setMethods('GET')
         ;
     }
-    
+
     /**
-     * @param mixed $option
-     * @return CsrfToken
+     * @param true|array $option
+     * @return CsrfToken|null
      */
     public function getTokenFromOption($option)
     {
@@ -61,14 +68,15 @@ class CsrfTokenManager
         }
         
         return (new CsrfToken())
-            ->setToken(array_key_exists('token', $option) ? $option['token'] : '_token')
+            ->setToken(array_key_exists('token', $option) ? $option['token'] : $this->fieldName)
             ->setIntention(array_key_exists('intention', $option) ? $option['intention'] : null)
             ->setMethods(array_key_exists('methods', $option) ? $option['methods'] : 'GET')
         ;
     }
-    
+
     /**
      * @param Route $route
+     * @return CsrfToken|null
      */
     public function getTokenFromRoute(Route $route)
     {

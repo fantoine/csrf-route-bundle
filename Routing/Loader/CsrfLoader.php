@@ -2,6 +2,7 @@
 
 namespace Fantoine\CsrfRouteBundle\Routing\Loader;
 
+use Fantoine\CsrfRouteBundle\Manager\CsrfTokenManager;
 use Sensio\Bundle\FrameworkExtraBundle\Routing\AnnotatedRouteControllerLoader;
 use Symfony\Component\Routing\Route;
 
@@ -30,7 +31,7 @@ class CsrfLoader extends AnnotatedRouteControllerLoader
         $annotation = $this->reader->getMethodAnnotation($method, '\\Fantoine\\CsrfRouteBundle\\Annotation\\CsrfToken');
         if (null !== $annotation) {
             // Store the CsrfToken options on Route options
-            $route->setOption('csrf_token', $annotation->toOption());
+            $route->setOption(CsrfTokenManager::OPTION_NAME, $annotation->toOption());
         }
     }
 }

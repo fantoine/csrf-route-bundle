@@ -9,10 +9,7 @@
         <!-- Handlers -->
         <parameter key="fantoine_csrf_route.handler.security.class">Fantoine\CsrfRouteBundle\Handler\SecurityTokenHandler</parameter>
         <parameter key="fantoine_csrf_route.handler.form.class">Fantoine\CsrfRouteBundle\Handler\FormTokenHandler</parameter>
-        
-        <!-- Event Listeners -->
-        <parameter key="fantoine_csrf_route.listener.controller.class">Fantoine\CsrfRouteBundle\EventListener\ControllerListener</parameter>
-        
+
         <!-- Routing -->
         <parameter key="fantoine_csrf_route.routing.router.class">Fantoine\CsrfRouteBundle\Routing\Router\CsrfRouter</parameter>
         <parameter key="fantoine_csrf_route.routing.loader.class">Fantoine\CsrfRouteBundle\Routing\Loader\CsrfLoader</parameter>
@@ -21,19 +18,14 @@
         <!-- Managers -->
         <service id="fantoine_csrf_route.manager" class="%fantoine_csrf_route.manager.class%">
             <argument type="service" id="fantoine_csrf_route.handler" />
+            <argument>%fantoine_csrf_route.field_name%</argument>
         </service>
-        
-        <!-- Event Listeners -->
-        <service id="fantoine_csrf_route.listener.controller" class="%fantoine_csrf_route.listener.controller.class%">
-            <argument type="service" id="router" />
-            <argument type="service" id="fantoine_csrf_route.manager" />
-            <argument type="service" id="filesystem" />
-            <argument>%kernel.cache_dir%/fantoine_csrf_route/routes</argument>
-            <tag name="kernel.event_subscriber" />
-        </service>
-        
+
         <!-- Routing -->
         <service id="fantoine_csrf_route.routing.router" class="%fantoine_csrf_route.routing.router.class%" parent="router.default" public="false">
+            <call method="setEnabled">
+                <argument>%fantoine_csrf_route.enabled%</argument>
+            </call>
             <call method="setTokenManager">
                 <argument type="service" id="fantoine_csrf_route.manager" />
             </call>

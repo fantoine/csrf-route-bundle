@@ -36,6 +36,20 @@ Then, register the bundle in your application's kernel class:
 ```
 
 
+## Configuration
+
+Configuration reference :
+
+```yaml
+fantoine_csrf_route:
+    enabled: true
+    field_name: _token
+```
+
+ - **enabled** : Enable or disable the token verification (default: `true`);
+ - **field_name** : The name of the field appended to route URLs (default: `_token`).
+
+
 ## Usage
 
 The only thing to do to use this package is to add some configurations to the routes you want to protect.
@@ -101,7 +115,7 @@ class DefaultController {
 
 ### Twig integration
 
-As the bundle provides a custom router, CSRF tokens are automatically append to url generated with `path(...)` and `url(...)` on Twig templates.
+As the bundle provides a custom router, CSRF tokens are automatically appended to url generated with `path(...)` and `url(...)` on Twig templates.
 
 
 ### Routers compatibility

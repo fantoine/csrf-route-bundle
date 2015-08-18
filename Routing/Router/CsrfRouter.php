@@ -16,6 +16,11 @@ use Symfony\Component\Routing\RequestContext;
 class CsrfRouter extends Router
 {
     /**
+     * @var bool
+     */
+    protected $enabled;
+
+    /**
      * @var Router
      */
     protected $parent;
@@ -24,6 +29,14 @@ class CsrfRouter extends Router
      * @var CsrfTokenManager
      */
     protected $tokenManager;
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    }
     
     /**
      * @param Router $router
@@ -77,21 +90,24 @@ class CsrfRouter extends Router
         
         return parent::match($pathinfo);
     }
-    
+
     /**
      * @param string $name
      * @param array $parameters
-     * @param string $referenceType
+     * @param bool|string $referenceType
+     * @return string
      */
     public function generate($name, $parameters = [], $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
     {
         // Add Csrf token if required
-        $route = $this->getRouteCollection()->get($name);
-        if (null !== $route) {
-            // Apply token if required
-            $this->tokenManager->updateRoute(
-                $route, $name, $parameters
-            );
+        if ($this->enabled) {
+            $route = $this->getRouteCollection()->get($name);
+            if (null !== $route) {
+                // Apply token if required
+                $this->tokenManager->updateRoute(
+                    $route, $name, $parameters
+                );
+            }
         }
         
         if (null !== $this->parent) {

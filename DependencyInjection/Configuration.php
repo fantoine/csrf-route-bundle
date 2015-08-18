@@ -18,6 +18,14 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
+        $rootNode = $treeBuilder->root('fantoine_csrf_route');
+
+        $rootNode
+            ->children()
+                ->booleanNode('enabled')->defaultTrue()->end()
+                ->scalarNode('field_name')->defaultValue('_token')->end()
+            ->end()
+        ;
 
         return $treeBuilder;
     }
