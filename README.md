@@ -1,9 +1,10 @@
+**/!\ This bundle is no more supported and has moved to [Genedys/csrf-route-bundle](https://github.com/Genedys/csrf-route-bundle) /!\**
+
 # FantoineCsrfRouteBundle
 
 This [Symfony2](http://symfony.com) bundle provides route annotation and options to secure routes against [CSRF attacks](http://en.wikipedia.org/wiki/Cross-site_request_forgery) and without using forms.
 
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/094a3583-b624-45a8-8006-c83f0c4291b4/mini.png)](https://insight.sensiolabs.com/projects/094a3583-b624-45a8-8006-c83f0c4291b4)
-
 
 ## Installation
 
